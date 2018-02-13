@@ -1,0 +1,18 @@
+# first, ignore everything by default
+*
+
+# allow gitignore
+!.gitignore
+
+# allow CMakeLists.txt
+!CMakeLists.txt
+
+# allow markdown
+!*.md
+
+# allow src dir
+!src/
+
+# and src files inside
+!*.cpp
+!*.h
