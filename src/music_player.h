@@ -5,12 +5,13 @@
 
 class MusicPlayer {
   public:
+    MusicPlayer();
     MusicPlayer(std::string filename);
     ~MusicPlayer();
     void pause(bool pause);
     void setPosition(float time);
     bool isPlaying();
-    float getTime();
+    float getTime() const;
 
   private:
     static void callback(void *userData, Uint8 *stream, int len);

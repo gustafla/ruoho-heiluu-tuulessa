@@ -4,11 +4,10 @@
 #include <cstdlib>
 #include "music_player.h"
 #include "sync.h" // Rocket
+#include "demo.h"
 
 #define BUFFER_W 1280
 #define BUFFER_H 720
-
-#define ROW_RATE ((160./60.)*8)
 
 #if !(SYNC_PLAYER)
 static void pause(void *d, int flag) {
@@ -32,6 +31,11 @@ void toggle_fullscreen(SDL_Window *w) {
   bool isFullscreen = SDL_GetWindowFlags(w) & SDL_WINDOW_FULLSCREEN;
   SDL_SetWindowFullscreen(w, isFullscreen ? 0 : SDL_WINDOW_FULLSCREEN);
   SDL_ShowCursor(isFullscreen); // Based on old value
+}
+
+void die(int rc) {
+  SDL_Quit();
+  exit(rc);
 }
 
 int main(int argc, char *argv[]) {
@@ -70,7 +74,7 @@ int main(int argc, char *argv[]) {
     if (w == nullptr) { // Still no window?
       std::cerr << "Failed to get a window without sRGB (exiting):"
         << std::endl << SDL_GetError() << std::endl;
-      return EXIT_FAILURE;
+      die(EXIT_FAILURE);
     }
   }
 
@@ -79,14 +83,14 @@ int main(int argc, char *argv[]) {
   if (c == nullptr) {
     std::cerr << "Failed to get an OpenGL context:"
       << std::endl << SDL_GetError() << std::endl;
-    return EXIT_FAILURE;
+    die(EXIT_FAILURE);
   }
 
   // Load OpenGL driver/libraries/api/calls/whatever
   if ((err = glewInit()) != GLEW_OK) {
     std::cerr << "GLEW failed to initialize:"
       << std::endl << glewGetErrorString(err) << std::endl;
-    return err;
+    die(err);
   }
 
   // Not required as CreateContext does this already
@@ -107,17 +111,23 @@ int main(int argc, char *argv[]) {
 
   // Set OpenGL up further
   glViewport(0, 0, BUFFER_W, BUFFER_H);
-  //glBindFramebuffer(GL_FRAMEBUFFER, 0);
   glClearColor(1, 0, 0, 1); // Red for visibility
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   // Set up music player
-  MusicPlayer player("music.ogg");
+  MusicPlayer player;
+  try {
+    player = MusicPlayer("music.ogg");
+  } catch (char const *str) {
+    std::cerr << "music.ogg: " << str << std::endl;
+    die(EXIT_FAILURE);
+  }
 
   // Set up rocket
   sync_device *rocket = sync_create_device("sync");
 
   // Demo loop
+  Demo demo(rocket, player);
   SDL_Event e;
   bool running = true;
   while (running) {
@@ -129,6 +139,8 @@ int main(int argc, char *argv[]) {
       sync_tcp_connect(rocket, "localhost", SYNC_DEFAULT_PORT);
     }
 #endif
+
+    demo.render();
 
     // Swap window framebuffers
     SDL_GL_SwapWindow(w);

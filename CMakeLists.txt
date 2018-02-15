@@ -4,7 +4,8 @@ project (demo)
 # C++11
 set (CMAKE_CXX_STANDARD 11)
 
-# Release and debug target compiler flags
+# compiler flags, build decides sync speed (beats per sec * rows per beat)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DROW_RATE='((160./60.)*8)'")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -g -DDEBUG")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O2 -DSYNC_PLAYER")
 

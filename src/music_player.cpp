@@ -2,12 +2,17 @@
 #include "stb_vorbis.h"
 #include <cstdlib>
 
+MusicPlayer::MusicPlayer(): audioDevice(0) {}
+
 MusicPlayer::MusicPlayer(std::string filename) {
   // Load vorbis file
   short *buffer;
   int channels, sampleRate;
   samples = stb_vorbis_decode_filename(filename.c_str(),
       &channels, &sampleRate, &buffer);
+  if (samples < 1) {
+    throw "Failed to open vorbis file";
+  }
 
   // SDL audio device specs
   SDL_AudioSpec want;
@@ -50,7 +55,7 @@ bool MusicPlayer::isPlaying() {
   return SDL_GetAudioDeviceStatus(audioDevice) == SDL_AUDIO_PLAYING;
 }
 
-float MusicPlayer::getTime() {
+float MusicPlayer::getTime() const {
   float since = static_cast<float>(SDL_GetTicks() - callbackTicks) / 1000.;
   int bytes = static_cast<int>(position - audio);
   int samples = (bytes / 2) / audioSpec.channels;
