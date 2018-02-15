@@ -2,6 +2,7 @@
 #include <GL/glew.h>
 #include <iostream>
 #include <cstdlib>
+#include "music_player.h"
 
 #define BUFFER_W 1280
 #define BUFFER_H 720
@@ -67,6 +68,15 @@ int main(int argc, char *argv[]) {
     return err;
   }
 
+  // Not required as CreateContext does this already
+  // SDL_GL_MakeCurrent(w, c);
+  
+  // Set regular vsync, late swap tearing not needed for this demo
+  if (SDL_GL_SetSwapInterval(1)) {
+    std::cerr << "Failed to get vsync:"
+      << std::endl << SDL_GetError() << std::endl;
+  }
+
   // Check if OpenGL framebuffer got SRGB capability and enable it
   int framebuffer_srgb;
   SDL_GL_GetAttribute(SDL_GL_FRAMEBUFFER_SRGB_CAPABLE, &framebuffer_srgb);
@@ -80,6 +90,9 @@ int main(int argc, char *argv[]) {
   glClearColor(1, 0, 0, 1); // Red for visibility
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+  // Set up music player
+  MusicPlayer player("music.ogg");
+
   // Demo loop
   SDL_Event e;
   bool running = true;
@@ -87,7 +100,7 @@ int main(int argc, char *argv[]) {
     // Swap window framebuffers
     SDL_GL_SwapWindow(w);
 
-    // Handle SDL events such as kill signals and keyboard
+    // Handle SDL events suh as kill signals and keyboard
     SDL_PollEvent(&e);
     switch(e.type) {
       case SDL_QUIT:
