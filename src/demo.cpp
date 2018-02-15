@@ -4,7 +4,7 @@
 Demo::Demo(sync_device *rocket, MusicPlayer const &player):
   rocket(rocket), player(player), t(0.) {}
 
-float Demo::get(std::string name) {
+double Demo::get(std::string name) {
   sync_track const *track;
   try {
     track = tracks.at(name);
