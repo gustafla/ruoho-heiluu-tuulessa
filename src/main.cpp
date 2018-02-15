@@ -153,6 +153,10 @@ int main(int argc, char *argv[]) {
     }
   }
 
+#if !(SYNC_PLAYER)
+  sync_save_tracks(rocket);
+#endif
+  sync_destroy_device(rocket);
   SDL_Quit();
   return 0;
 }

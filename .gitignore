@@ -16,3 +16,6 @@
 # and src files inside
 !*.cpp
 !*.h
+
+# allow rocket data
+!sync.rocket
