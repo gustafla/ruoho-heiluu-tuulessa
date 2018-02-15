@@ -25,4 +25,6 @@ void Demo::render() {
   t = player.getTime();
   glClearColor(get("red"), get("green"), get("blue"), 1.);
   glClear(GL_COLOR_BUFFER_BIT);
+
+  grass->render();
 }
