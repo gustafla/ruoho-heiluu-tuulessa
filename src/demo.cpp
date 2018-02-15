@@ -1,8 +1,14 @@
 #include "demo.h"
 #include "GL/glew.h"
 
+#include "grass.h"
+
 Demo::Demo(sync_device *rocket, MusicPlayer const &player):
-  rocket(rocket), player(player), t(0.) {}
+  rocket(rocket), player(player), t(0.), grass(new Grass(*this)) {}
+
+Demo::~Demo() {
+  delete grass;
+}
 
 double Demo::get(std::string name) {
   sync_track const *track;

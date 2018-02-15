@@ -1,4 +1,8 @@
 <sync rows="1024">
-	<tracks/>
+	<tracks>
+		<track name="blue"/>
+		<track name="green"/>
+		<track name="red"/>
+	</tracks>
 	<bookmarks/>
 </sync>
