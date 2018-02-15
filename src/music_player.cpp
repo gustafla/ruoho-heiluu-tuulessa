@@ -2,7 +2,7 @@
 #include "stb_vorbis.h"
 #include <cstdlib>
 
-MusicPlayer::MusicPlayer(): audioDevice(0) {}
+MusicPlayer::MusicPlayer(): audio(nullptr), audioDevice(0) {}
 
 MusicPlayer::MusicPlayer(std::string filename) {
   // Load vorbis file
@@ -31,14 +31,16 @@ MusicPlayer::MusicPlayer(std::string filename) {
   }
 
   // Setup playback variable, must cast, stb_vorbis doesn't load to uint8
-  audio = position = reinterpret_cast<Uint8*>(buffer);
+  audio = reinterpret_cast<Uint8*>(buffer);
+  position = audio;
 }
 
 MusicPlayer::~MusicPlayer() {
   SDL_CloseAudioDevice(audioDevice);
-  // Cast back to original type necessary?
-  free(reinterpret_cast<short*>(audio));
-  // free() instead of delete[] because stb_vorbis uses malloc
+  if (audio != nullptr) {
+    free(reinterpret_cast<short *>(audio));
+    // free() instead of delete[] because stb_vorbis uses malloc
+  }
 }
 
 void MusicPlayer::pause(bool pause) {
