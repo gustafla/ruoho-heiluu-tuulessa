@@ -46,6 +46,20 @@ void MusicPlayer::setPosition(float time) {
   position = audio + samples * audioSpec.channels * 2;
 }
 
+bool MusicPlayer::isPlaying() {
+  return SDL_GetAudioDeviceStatus(audioDevice) == SDL_AUDIO_PLAYING;
+}
+
+float MusicPlayer::getTime() {
+  float since = static_cast<float>(SDL_GetTicks() - callbackTicks) / 1000.;
+  int bytes = static_cast<int>(position - audio);
+  int samples = (bytes / 2) / audioSpec.channels;
+  float t = static_cast<float>(samples) / static_cast<float>(audioSpec.freq);
+  float bufferDuration = static_cast<float>(audioSpec.samples)
+    / static_cast<float>(audioSpec.freq);
+  return t + (since > bufferDuration ? bufferDuration : since);
+}
+
 void MusicPlayer::callback(void *userData, Uint8 *stream, int len) {
   MusicPlayer *musicPlayer = (MusicPlayer*)userData;
 
@@ -69,4 +83,7 @@ void MusicPlayer::callback(void *userData, Uint8 *stream, int len) {
 
   // Update position
   musicPlayer->position += len;
+
+  // Get time
+  musicPlayer->callbackTicks = SDL_GetTicks();
 }

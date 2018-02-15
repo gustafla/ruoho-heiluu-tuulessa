@@ -9,9 +9,12 @@ class MusicPlayer {
     ~MusicPlayer();
     void pause(bool pause);
     void setPosition(float time);
-  
+    bool isPlaying();
+    float getTime();
+
   private:
     static void callback(void *userData, Uint8 *stream, int len);
+    Uint32 callbackTicks; // More precision for timing
     int samples;
     Uint8 *audio;
     Uint8 *position;

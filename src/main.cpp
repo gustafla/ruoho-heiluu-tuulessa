@@ -3,9 +3,30 @@
 #include <iostream>
 #include <cstdlib>
 #include "music_player.h"
+#include "sync.h" // Rocket
 
 #define BUFFER_W 1280
 #define BUFFER_H 720
+
+#define ROW_RATE ((160./60.)*8)
+
+#if !(SYNC_PLAYER)
+static void pause(void *d, int flag) {
+  static_cast<MusicPlayer*>(d)->pause(flag);
+}
+
+static void setRow(void *d, int row) {
+  static_cast<MusicPlayer*>(d)->setPosition(row/ROW_RATE);
+}
+
+static int isPlaying(void *d) {
+  return static_cast<MusicPlayer*>(d)->isPlaying();
+}
+
+static struct sync_cb playerControls = {
+  pause, setRow, isPlaying
+};
+#endif
 
 void toggle_fullscreen(SDL_Window *w) {
   bool isFullscreen = SDL_GetWindowFlags(w) & SDL_WINDOW_FULLSCREEN;
@@ -70,7 +91,7 @@ int main(int argc, char *argv[]) {
 
   // Not required as CreateContext does this already
   // SDL_GL_MakeCurrent(w, c);
-  
+
   // Set regular vsync, late swap tearing not needed for this demo
   if (SDL_GL_SetSwapInterval(1)) {
     std::cerr << "Failed to get vsync:"
@@ -93,10 +114,22 @@ int main(int argc, char *argv[]) {
   // Set up music player
   MusicPlayer player("music.ogg");
 
+  // Set up rocket
+  sync_device *rocket = sync_create_device("sync");
+
   // Demo loop
   SDL_Event e;
   bool running = true;
   while (running) {
+
+#if !(SYNC_PLAYER)
+    // Rocket update
+    if (sync_update(rocket, (int)(player.getTime()*ROW_RATE),
+        &playerControls, (void*)&player)) {
+      sync_tcp_connect(rocket, "localhost", SYNC_DEFAULT_PORT);
+    }
+#endif
+
     // Swap window framebuffers
     SDL_GL_SwapWindow(w);
 
