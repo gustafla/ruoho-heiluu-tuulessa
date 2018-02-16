@@ -13,6 +13,7 @@ set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O2 -DSYNC_PLAYER")
 file(GLOB SRC_FILES
   "src/*.cpp"
   "lib/rocket/*.c" # Just compile rocket in, static linking sucks
+  "lib/glew/*.c"
 )
 
 # OpenGL
@@ -28,6 +29,8 @@ include_directories(${SDL2_INCLUDE_DIRS})
 include_directories("lib/rocket")
 # stb
 include_directories("lib/stb")
+# glew
+include_directories("lib/glew")
 
 # the executable
 add_executable(${PROJECT_NAME} ${SRC_FILES})

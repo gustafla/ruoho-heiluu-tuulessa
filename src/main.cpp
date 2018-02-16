@@ -1,10 +1,12 @@
+#define GLEW_STATIC
+
 #include <SDL.h>
-#include <GL/glew.h>
 #include <iostream>
 #include <cstdlib>
 #include <fstream>
 #include "music_player.h"
 #include "sync.h" // Rocket
+#include "GL/glew.h"
 #include "demo.h"
 #include "util.h"
 
@@ -78,6 +80,7 @@ int main(int argc, char *argv[]) {
   // Set OpenGL attributes
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
+  SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
   SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
   SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
   SDL_GL_SetAttribute(SDL_GL_FRAMEBUFFER_SRGB_CAPABLE, 1);
@@ -117,7 +120,7 @@ int main(int argc, char *argv[]) {
     die(EXIT_FAILURE);
   }
 
-  // Load OpenGL driver/libraries/api/calls/whatever
+  // Load OpenGL api/calls/whatever
   if ((err = glewInit()) != GLEW_OK) {
     std::cerr << "GLEW failed to initialize:"
       << std::endl << glewGetErrorString(err) << std::endl;

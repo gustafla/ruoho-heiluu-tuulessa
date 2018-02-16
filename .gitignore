@@ -7,14 +7,17 @@
 # allow CMakeLists.txt
 !CMakeLists.txt
 
-# allow markdown
+# allow markdown and licenses
 !*.md
+!LICENSE.txt
 
 # allow src dir
 !src/
 
 # allow libs
 !lib/
+!lib/glew/
+!lib/glew/GL/
 !lib/rocket/
 !lib/stb/
 
@@ -25,3 +28,4 @@
 
 # allow rocket data
 !sync.rocket
+
