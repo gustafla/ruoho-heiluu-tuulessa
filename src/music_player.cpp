@@ -1,5 +1,7 @@
 #include "music_player.h"
 #include "stb_vorbis.h"
+#include "util.h"
+#include <iostream>
 #include <cstdlib>
 
 MusicPlayer::MusicPlayer(): audio(nullptr), audioDevice(0) {}
@@ -11,7 +13,8 @@ MusicPlayer::MusicPlayer(std::string filename) {
   samples = stb_vorbis_decode_filename(filename.c_str(),
       &channels, &sampleRate, &buffer);
   if (samples < 1) {
-    throw "Failed to open vorbis file";
+    std::cerr << filename << ": Failed to open vorbis file" << std::endl;
+    die(EXIT_FAILURE); // exceptions are a pain, not needed in a demo
   }
 
   // SDL audio device specs
@@ -27,7 +30,8 @@ MusicPlayer::MusicPlayer(std::string filename) {
   audioDevice = SDL_OpenAudioDevice(nullptr, 0, &want, &audioSpec,
       SDL_AUDIO_ALLOW_FORMAT_CHANGE);
   if (audioDevice == 0) {
-    throw "Failed to open audio device";
+    std::cerr << filename << ": Failed to open audio device" << std::endl;
+    die(EXIT_FAILURE);
   }
 
   // Setup playback variable, must cast, stb_vorbis doesn't load to uint8

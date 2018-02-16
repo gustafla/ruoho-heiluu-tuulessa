@@ -5,6 +5,7 @@
 #include "music_player.h"
 #include "sync.h" // Rocket
 #include "demo.h"
+#include "util.h"
 
 #define BUFFER_W 1280
 #define BUFFER_H 720
@@ -31,11 +32,6 @@ void toggle_fullscreen(SDL_Window *w) {
   bool isFullscreen = SDL_GetWindowFlags(w) & SDL_WINDOW_FULLSCREEN;
   SDL_SetWindowFullscreen(w, isFullscreen ? 0 : SDL_WINDOW_FULLSCREEN);
   SDL_ShowCursor(isFullscreen); // Based on old value
-}
-
-void die(int rc) {
-  SDL_Quit();
-  exit(rc);
 }
 
 int main(int argc, char *argv[]) {
@@ -114,17 +110,11 @@ int main(int argc, char *argv[]) {
   glClearColor(1, 0, 0, 1); // Red for visibility
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-  // Set up music player
-  MusicPlayer player;
-  try {
-    player = MusicPlayer("music.ogg");
-  } catch (char const *str) {
-    std::cerr << "music.ogg: " << str << std::endl;
-    die(EXIT_FAILURE);
-  }
-
   // Set up rocket
   sync_device *rocket = sync_create_device("sync");
+
+  // Set up music player
+  MusicPlayer player = MusicPlayer("music.ogg");
 
   // Demo loop
   Demo demo(rocket, player);
@@ -135,7 +125,7 @@ int main(int argc, char *argv[]) {
 #if !(SYNC_PLAYER)
     // Rocket update
     if (sync_update(rocket, (int)(player.getTime()*ROW_RATE),
-        &playerControls, (void*)&player)) {
+          &playerControls, (void*)&player)) {
       sync_tcp_connect(rocket, "localhost", SYNC_DEFAULT_PORT);
     }
 #endif
