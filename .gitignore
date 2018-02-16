@@ -13,8 +13,14 @@
 # allow src dir
 !src/
 
+# allow libs
+!lib/
+!lib/rocket/
+!lib/stb/
+
 # and src files inside
 !*.cpp
+!*.c
 !*.h
 
 # allow rocket data

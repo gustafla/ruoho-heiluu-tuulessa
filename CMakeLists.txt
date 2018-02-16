@@ -26,6 +26,8 @@ find_package(SDL2 REQUIRED)
 include_directories(${SDL2_INCLUDE_DIRS})
 # rocket
 include_directories("lib/rocket")
+# stb
+include_directories("lib/stb")
 
 # the executable
 add_executable(${PROJECT_NAME} ${SRC_FILES})

@@ -1,5 +1,5 @@
 #include "music_player.h"
-#include "stb_vorbis.h"
+#include "stb_vorbis.c"
 #include "util.h"
 #include <iostream>
 #include <cstdlib>
