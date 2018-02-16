@@ -2,13 +2,11 @@
 #include <GL/glew.h>
 #include <iostream>
 #include <cstdlib>
+#include <fstream>
 #include "music_player.h"
 #include "sync.h" // Rocket
 #include "demo.h"
 #include "util.h"
-
-#define BUFFER_W 1280
-#define BUFFER_H 720
 
 #if !(SYNC_PLAYER)
 static void pause(void *d, int flag) {
@@ -37,6 +35,38 @@ void toggle_fullscreen(SDL_Window *w) {
 int main(int argc, char *argv[]) {
   int err;
 
+  int width = 1280;
+  int height = 720;
+  bool fullscreen = false;
+
+  // Parse conf file
+  std::ifstream conf("demo.conf", std::ifstream::in);
+  std::string token, op;
+  int val;
+  while (conf >> token >> op >> val) {
+    if (token == "width") {
+      width = val;
+    } else if (token == "height") {
+      height = val;
+    } else if (token == "fullscreen") {
+      fullscreen = val;
+    }
+  }
+
+  // Parse cli args
+  for (int i=1; i<argc-1; i++) { // Args with pairs here
+    if (strcmp(argv[i], "-w") == 0) {
+      width = atoi(argv[i+1]);
+    } else if (strcmp(argv[i], "-h") == 0) {
+      height = atoi(argv[i+1]);
+    }
+  }
+  for (int i=1; i<argc; i++) { // Args without pair
+    if (strcmp(argv[i], "--fullscreen") == 0) {
+      fullscreen = true;
+    }
+  }
+
   // Init SDL2
   Uint32 const FLAGS = SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_EVENTS;
   if ((err = SDL_Init(FLAGS)) < 0) {
@@ -55,7 +85,7 @@ int main(int argc, char *argv[]) {
   // Init a window
   SDL_Window *w = SDL_CreateWindow("instanssidemo",
       SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-      BUFFER_W, BUFFER_H, SDL_WINDOW_OPENGL);
+      width, height, SDL_WINDOW_OPENGL);
 
   if (w == nullptr) {
     std::cerr << "Failed to get a window with sRGB:"
@@ -65,13 +95,18 @@ int main(int argc, char *argv[]) {
     SDL_GL_SetAttribute(SDL_GL_FRAMEBUFFER_SRGB_CAPABLE, 0);
     w = SDL_CreateWindow("instanssidemo",
         SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-        BUFFER_W, BUFFER_H, SDL_WINDOW_OPENGL);
+        width, height, SDL_WINDOW_OPENGL);
 
     if (w == nullptr) { // Still no window?
       std::cerr << "Failed to get a window without sRGB (exiting):"
         << std::endl << SDL_GetError() << std::endl;
       die(EXIT_FAILURE);
     }
+  }
+
+  // Enter fullscreen if needed
+  if (fullscreen) {
+    toggle_fullscreen(w);
   }
 
   // Init a context
@@ -106,7 +141,7 @@ int main(int argc, char *argv[]) {
   }
 
   // Set OpenGL up further
-  glViewport(0, 0, BUFFER_W, BUFFER_H);
+  glViewport(0, 0, width, height);
   glClearColor(1, 0, 0, 1); // Red for visibility
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 

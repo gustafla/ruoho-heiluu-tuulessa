@@ -1,4 +1,4 @@
-<sync rows="1024">
+<sync rows="128">
 	<tracks>
 		<track name="blue"/>
 		<track name="green"/>
