@@ -1,4 +1,5 @@
 The OpenGL Extension Wrangler Library
+Version 2.1.0
 Copyright (C) 2002-2007, Milan Ikits <milan ikits[]ieee org>
 Copyright (C) 2002-2007, Marcelo E. Magallon <mmagallo[]debian org>
 Copyright (C) 2002, Lev Povalahev
