@@ -1,13 +1,18 @@
-cmake_minimum_required (VERSION 3.1)
-project (demo)
+cmake_minimum_required(VERSION 3.1)
+project(demo)
+
+# if not specified, build a release build
+if(CMAKE_BUILD_TYPE STREQUAL "")
+  set(CMAKE_BUILD_TYPE "Release")
+endif()
 
 # C++11
-set (CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 11)
 
 # compiler flags, build decides sync speed (beats per sec * rows per beat)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DROW_RATE='((160./60.)*8)'")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -g -DDEBUG")
-set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O2 -DSYNC_PLAYER")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -s -O2 -DSYNC_PLAYER")
 
 # static stdc++ for max compatibility.
 # Target is GNU/Linux; libgcc and libc.so.6 should be present.
