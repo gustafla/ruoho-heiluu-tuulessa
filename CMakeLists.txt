@@ -22,7 +22,7 @@ set(CMAKE_EXE_LINKER_FLAGS_RELEASE "-static-libstdc++")
 # Glob src files
 file(GLOB SRC_FILES
   "src/*.cpp"
-  "lib/rocket/*.c" # Just compile rocket in, static linking sucks
+  "lib/rocket/*.c" # Just compile libs in, static linking sucks
   "lib/glew/*.c"
 )
 
