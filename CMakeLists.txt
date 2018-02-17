@@ -1,4 +1,4 @@
-cmake_minimum_required (VERSION 3.7)
+cmake_minimum_required (VERSION 3.1)
 project (demo)
 
 # C++11
@@ -8,6 +8,9 @@ set (CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DROW_RATE='((160./60.)*8)'")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -g -DDEBUG")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O2 -DSYNC_PLAYER")
+
+# static stdc++ for max compatibility
+set(CMAKE_EXE_LINKER_FLAGS_RELEASE "-static-libstdc++")
 
 # Glob src files
 file(GLOB SRC_FILES
