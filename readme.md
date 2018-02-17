@@ -10,7 +10,7 @@ Recommended Intel Ivy Bridge Core i5 M-line processor and HD Graphics 4000 GPU
 
 Install dependencies
 
-- a c++11 compiler
+- a C++11 compiler (and a linker with -static-libstdc++ support ?)
 - SDL2.0 and headers
 - OpenGL drivers and headers (probably satisfied by installing sdl2)
 - GLM (OpenGL Mathematics)
