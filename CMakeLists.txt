@@ -9,7 +9,9 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DROW_RATE='((160./60.)*8)'")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -g -DDEBUG")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O2 -DSYNC_PLAYER")
 
-# static stdc++ for max compatibility
+# static stdc++ for max compatibility.
+# Target is GNU/Linux; libgcc and libc.so.6 should be present.
+# C++ versions are a mismatch.
 set(CMAKE_EXE_LINKER_FLAGS_RELEASE "-static-libstdc++")
 
 # Glob src files
@@ -22,9 +24,6 @@ file(GLOB SRC_FILES
 # OpenGL
 find_package(OpenGL REQUIRED)
 include_directories(${OPENGL_INCLUDE_DIRS})
-# GLEW
-find_package(GLEW REQUIRED)
-include_directories(${GLEW_INCLUDE_DIRS})
 # SDL2
 find_package(SDL2 REQUIRED)
 include_directories(${SDL2_INCLUDE_DIRS})
@@ -38,5 +37,4 @@ include_directories("lib/glew")
 # the executable
 add_executable(${PROJECT_NAME} ${SRC_FILES})
 target_link_libraries(${PROJECT_NAME} ${OPENGL_LIBRARY})
-target_link_libraries(${PROJECT_NAME} ${GLEW_LIBRARIES})
 target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES})
