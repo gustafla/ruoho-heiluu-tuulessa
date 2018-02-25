@@ -1,12 +1,10 @@
-#define GLEW_STATIC
-
 #include <SDL.h>
 #include <iostream>
 #include <cstdlib>
 #include <fstream>
+#include "GL/glew.h"
 #include "music_player.h"
 #include "sync.h" // Rocket
-#include "GL/glew.h"
 #include "demo.h"
 #include "util.h"
 
