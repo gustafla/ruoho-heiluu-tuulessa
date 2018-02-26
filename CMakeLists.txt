@@ -26,6 +26,12 @@ file(GLOB SRC_FILES
   "lib/glew/*.c"
 )
 
+# Copy shader files
+file(GLOB SHADER_FILES "src/*.glsl" "src/*.frag" "src/*.vert")
+foreach(SHADER_FILE ${SHADER_FILES})
+  configure_file(${SHADER_FILE} ${CMAKE_CURRENT_BINARY_DIR} COPYONLY)
+endforeach()
+
 # OpenGL
 find_package(OpenGL REQUIRED)
 include_directories(${OPENGL_INCLUDE_DIRS})
