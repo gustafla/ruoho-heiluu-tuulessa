@@ -21,7 +21,8 @@
 !lib/rocket/
 !lib/stb/
 
-# and src files inside
+#and src files inside
+!*.glsl
 !*.cpp
 !*.c
 !*.h
