@@ -14,12 +14,12 @@ class Demo {
     void render();
 
   private:
-    sync_device *rocket;
-    MusicPlayer const &player;
-    double t;
+    sync_device *m_rocket;
+    MusicPlayer const &m_player;
+    double m_t;
     // Likely faster to cache tracks to a map as sync_get_track only iterates.
-    std::unordered_map<std::string, sync_track const *> tracks;
+    std::unordered_map<std::string, sync_track const *> m_tracks;
 
     // Visual components
-    Grass *grass;
+    Grass *m_grass;
 };

@@ -15,10 +15,11 @@ class MusicPlayer {
 
   private:
     static void callback(void *userData, Uint8 *stream, int len);
-    Uint32 callbackTicks; // More precision for timing
-    int samples;
-    Uint8 *audio;
-    Uint8 *position;
-    SDL_AudioSpec audioSpec;
-    SDL_AudioDeviceID audioDevice;
+
+    Uint32 m_callbackTicks; // More precision for timing
+    int m_samples;
+    Uint8 *m_audio;
+    Uint8 *m_position;
+    SDL_AudioSpec m_audioSpec;
+    SDL_AudioDeviceID m_audioDevice;
 };
