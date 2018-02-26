@@ -24,8 +24,11 @@ See lib/*/LICENSE.txt for licensing of 3rd party program libraries
 
 -------------------------------------------------------------------------------
 
-Music ("music.ogg") by beatfarmer released with the CC BY-NC-SA 4.0 license
-<https://creativecommons.org/licenses/by-nc-sa/4.0/>
+Music ("music.ogg") by beatfarmer released with the CC BY-NC-SA 4.0 license.
 
 Video recordings of the demo, with beatfarmer's music are to be released with
 CC BY-NC-SA 4.0 as well.
+
+Choreography data ("sync.rocket", "*.track") are released with CC BY-NC-SA 4.0.
+
+<https://creativecommons.org/licenses/by-nc-sa/4.0/>
