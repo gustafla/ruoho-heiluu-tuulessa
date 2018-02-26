@@ -141,6 +141,11 @@ int main(int argc, char *argv[]) {
     glEnable(GL_FRAMEBUFFER_SRGB);
   }
 
+#if (DEBUG)
+  std::cerr << "GLSL ver: "
+    << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
+#endif
+
   // Set OpenGL up further
   glViewport(0, 0, width, height);
   glClearColor(1, 0, 0, 1); // Red for visibility

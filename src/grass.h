@@ -12,6 +12,8 @@ class Grass {
 
   private:
     GLuint buffer;
+    GLuint vertexArray;
     GLuint program;
+
     Demo &demo;
 };
