@@ -1,8 +1,8 @@
+#include "gl_headers.h" // essentially glew
 #include <SDL.h>
 #include <iostream>
 #include <cstdlib>
 #include <fstream>
-#include "gl_headers.h" // essentially glew
 #include "music_player.h"
 #include "sync.h" // Rocket
 #include "demo.h"
@@ -118,15 +118,21 @@ int main(int argc, char *argv[]) {
     die(EXIT_FAILURE);
   }
 
+  SDL_GL_MakeCurrent(w, c);
+
   // Load OpenGL api/calls/whatever
-  if ((err = glewInit()) != GLEW_OK) {
+  err = glewInit();
+  if (err != GLEW_OK) {
     std::cerr << "GLEW failed to initialize:"
       << std::endl << glewGetErrorString(err) << std::endl;
     die(err);
   }
 
-  // Not required as CreateContext does this already
-  // SDL_GL_MakeCurrent(w, c);
+#if (DEBUG)
+  std::cerr << "GL ver: " << glGetString(GL_VERSION) << std::endl;
+  std::cerr << "GLSL ver: "
+    << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
+#endif
 
   // Set regular vsync, late swap tearing not needed for this demo
   if (SDL_GL_SetSwapInterval(1)) {
@@ -140,12 +146,6 @@ int main(int argc, char *argv[]) {
   if (framebuffer_srgb) {
     glEnable(GL_FRAMEBUFFER_SRGB);
   }
-
-#if (DEBUG)
-  std::cerr << "GL ver: " << glGetString(GL_VERSION) << std::endl;
-  std::cerr << "GLSL ver: "
-    << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
-#endif
 
   // Set OpenGL up further
   glViewport(0, 0, width, height);
