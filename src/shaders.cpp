@@ -12,7 +12,7 @@ GLuint compileShader(std::string src, GLenum type) {
   glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
   if(!success) {
     glGetShaderInfoLog(shader, 512, NULL, infoLog);
-    std::cerr << infoLog << std::endl;
+    std::cerr << "compileShader:" << std::endl << infoLog << std::endl;
     glDeleteShader(shader); // free failed shader
     return 0; //glCreateShader returns 0 if an error occurs.
   }
@@ -23,7 +23,7 @@ GLuint compileShader(std::string src, GLenum type) {
 GLuint linkProgram(std::string vertexSrc, std::string fragmentSrc) {
   GLuint vs, fs, sp = 0;
   vs = compileShader(vertexSrc, GL_VERTEX_SHADER);
-  fs = compileShader(vertexSrc, GL_FRAGMENT_SHADER);
+  fs = compileShader(fragmentSrc, GL_FRAGMENT_SHADER);
 
   if (vs && fs) { // Both have been nicely compiled
     sp = glCreateProgram();
@@ -36,7 +36,7 @@ GLuint linkProgram(std::string vertexSrc, std::string fragmentSrc) {
     glGetProgramiv(sp, GL_LINK_STATUS, &success);
     if(!success) {
       glGetProgramInfoLog(sp, 512, NULL, infoLog);
-      std::cerr << infoLog << std::endl;
+      std::cerr << "linkProgram:" << std::endl << infoLog << std::endl;
       glDeleteProgram(sp);
       sp = 0;
     }

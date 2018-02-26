@@ -29,7 +29,6 @@ Grass::Grass(Demo &demo): demo(demo) {
   if (!program) {
     die(EXIT_FAILURE);
   }
-  glBindAttribLocation(program, 0, "aPos");
 }
 
 void Grass::render() {
