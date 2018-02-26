@@ -8,6 +8,7 @@ class Demo; // demo.h, can't include here
 class Grass {
   public:
     Grass(Demo &demo);
+    ~Grass();
     void render();
 
   private:

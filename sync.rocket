@@ -1,8 +1,14 @@
 <sync rows="128">
 	<tracks>
-		<track name="blue"/>
-		<track name="green"/>
-		<track name="red"/>
+		<track name="blue">
+			<key value="1" interpolation="0" row="0"/>
+		</track>
+		<track name="green">
+			<key value="1" interpolation="0" row="0"/>
+		</track>
+		<track name="red">
+			<key value="1" interpolation="0" row="0"/>
+		</track>
 	</tracks>
 	<bookmarks/>
 </sync>

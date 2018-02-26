@@ -12,11 +12,11 @@ Grass::Grass(Demo &demo): m_demo(demo) {
   
   // Gen buffer and VA objects
   glGenBuffers(1, &m_buffer);
+  glBindBuffer(GL_ARRAY_BUFFER, m_buffer);
   glGenVertexArrays(1, &m_vertexArray);
   glBindVertexArray(m_vertexArray);
 
-  // Bind buffer and load data
-  glBindBuffer(GL_ARRAY_BUFFER, m_buffer);
+  // Load data
   glBufferData(GL_ARRAY_BUFFER, sizeof(v), v, GL_STATIC_DRAW);
 
   // "Record" to VAO which VBO is in use and how to configure rendering with it
@@ -29,6 +29,12 @@ Grass::Grass(Demo &demo): m_demo(demo) {
   if (!m_program) {
     die(EXIT_FAILURE);
   }
+}
+
+Grass::~Grass() {
+  glDeleteVertexArrays(1, &m_vertexArray);
+  glDeleteBuffers(1, &m_buffer);
+  glDeleteProgram(m_program);
 }
 
 void Grass::render() {
