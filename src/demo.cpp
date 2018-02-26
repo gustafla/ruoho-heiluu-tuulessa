@@ -1,5 +1,5 @@
 #include "demo.h"
-#include "GL/glew.h"
+#include "gl_headers.h"
 
 #include "grass.h"
 

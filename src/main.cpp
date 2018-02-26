@@ -2,7 +2,7 @@
 #include <iostream>
 #include <cstdlib>
 #include <fstream>
-#include "GL/glew.h"
+#include "gl_headers.h" // essentially glew
 #include "music_player.h"
 #include "sync.h" // Rocket
 #include "demo.h"
@@ -142,6 +142,7 @@ int main(int argc, char *argv[]) {
   }
 
 #if (DEBUG)
+  std::cerr << "GL ver: " << glGetString(GL_VERSION) << std::endl;
   std::cerr << "GLSL ver: "
     << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
 #endif

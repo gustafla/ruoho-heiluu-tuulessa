@@ -1,7 +1,7 @@
 #pragma once
 
 #include <glm/vec3.hpp>
-#include "GL/glew.h"
+#include "gl_headers.h"
 
 class Demo; // demo.h, can't include here
 
