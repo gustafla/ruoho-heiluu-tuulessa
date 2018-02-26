@@ -1,5 +1,7 @@
 #include "grass.h"
 #include "demo.h"
+#include "util.h"
+#include "shaders.h"
 
 Grass::Grass(Demo &demo): demo(demo) {
   GLfloat v[] = {
@@ -11,6 +13,7 @@ Grass::Grass(Demo &demo): demo(demo) {
   glGenBuffers(1, &buffer);
   glBindBuffer(GL_ARRAY_BUFFER, buffer);
   glBufferData(GL_ARRAY_BUFFER, sizeof(v), v, GL_STATIC_DRAW);
+
 
 }
 

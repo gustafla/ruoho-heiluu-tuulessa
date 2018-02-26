@@ -1,9 +1,9 @@
-#include "gimme_a_shader_program_please.h"
+#include "shaders.h"
 #include <iostream>
 
-GLuint gimme_a_shader(std::string src, GLenum type) {
+GLuint compileShader(std::string src, GLenum type) {
   GLuint shader = glCreateShader(type);
-  GLchar const *src_cstr = sr.c_str();
+  GLchar const *src_cstr = src.c_str();
   glShaderSource(shader, 1, &src_cstr, nullptr);
   glCompileShader(shader);
 
@@ -20,11 +20,10 @@ GLuint gimme_a_shader(std::string src, GLenum type) {
   return shader;
 }
 
-GLuint gimme_a_shader_program_please(std::string vertexSrc,
-    std::string fragmentSrc) {
+GLuint linkProgram(std::string vertexSrc, std::string fragmentSrc) {
   GLuint vs, fs, sp = 0;
-  vs = gimme_a_shader(vertexSrc, GL_VERTEX_SHADER);
-  fs = gimme_a_shader(vertexSrc, GL_FRAGMENT_SHADER);
+  vs = compileShader(vertexSrc, GL_VERTEX_SHADER);
+  fs = compileShader(vertexSrc, GL_FRAGMENT_SHADER);
 
   if (vs && fs) { // Both have been nicely compiled
     sp = glCreateProgram();
