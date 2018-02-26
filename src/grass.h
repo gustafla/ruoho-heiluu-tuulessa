@@ -12,5 +12,6 @@ class Grass {
 
   private:
     GLuint buffer;
+    GLuint program;
     Demo &demo;
 };
