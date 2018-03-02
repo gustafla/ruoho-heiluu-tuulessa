@@ -72,10 +72,14 @@ Grass::~Grass() {
 }
 
 void Grass::render() {
-  GLuint uModel = m_demo.getUniformLocation("u_model");
+  glActiveTexture(GL_TEXTURE0);
+  glBindTexture(GL_TEXTURE_2D, m_texDiffuse);
+  glActiveTexture(GL_TEXTURE1);
+  glBindTexture(GL_TEXTURE_2D, m_texSpecular);
 
   glBindVertexArray(m_vertexArray);
 
+  GLuint uModel = m_demo.getUniformLocation("u_model");
   for (auto v: m_positions) { // render n blades of grass
     // fake wind
     float r = (sin(v.x + m_demo.get("grass.t"))*0.3+0.3) * m_demo.get("wind");

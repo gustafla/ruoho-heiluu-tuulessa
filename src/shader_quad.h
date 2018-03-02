@@ -18,4 +18,5 @@ class ShaderQuad {
     GLint m_uTex0;
     GLint m_uTex1;
     GLint m_uTex2;
+    GLint m_uTex3;
 };

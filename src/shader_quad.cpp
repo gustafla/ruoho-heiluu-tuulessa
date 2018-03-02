@@ -50,6 +50,7 @@ ShaderQuad::ShaderQuad(std::string const &fragmentFilename) {
   m_uTex0 = glGetUniformLocation(m_program, "u_tex0");
   m_uTex1 = glGetUniformLocation(m_program, "u_tex1");
   m_uTex2 = glGetUniformLocation(m_program, "u_tex2");
+  m_uTex3 = glGetUniformLocation(m_program, "u_tex3");
 }
 
 ShaderQuad::~ShaderQuad() {
@@ -64,6 +65,7 @@ void ShaderQuad::render() {
   glUniform1i(m_uTex0, 0);
   glUniform1i(m_uTex1, 1);
   glUniform1i(m_uTex2, 2);
+  glUniform1i(m_uTex3, 3);
 
   glBindVertexArray(m_vertexArray);
 

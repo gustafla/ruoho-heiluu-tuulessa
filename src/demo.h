@@ -7,6 +7,8 @@
 #include "shader_quad.h"
 #include "framebuffer.h"
 
+#define DEMO_POST_NOISE_SIZE 512
+
 class Grass; // grass.h
 
 class Demo {
@@ -37,6 +39,7 @@ class Demo {
 
     // Lighting and post pass
     ShaderQuad m_lightingPass;
+    GLuint m_texNoise;
 
     // Visual components
     Grass *m_grass;

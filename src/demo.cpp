@@ -21,6 +21,14 @@ Demo::Demo(sync_device *rocket, MusicPlayer const &player, int w, int h):
   m_uProjection = getUniformLocation("u_projection");
   m_uView = getUniformLocation("u_view");
 
+  // Gen noise tex
+  glGenTextures(1, &m_texNoise);
+  glBindTexture(GL_TEXTURE_2D, m_texNoise);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, DEMO_POST_NOISE_SIZE,
+      DEMO_POST_NOISE_SIZE, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
 #if (SYNC_PLAYER)
   player.pause(false);
 #endif
@@ -73,6 +81,16 @@ void Demo::render() {
 
   // Bind G-Buffer textures
   m_gBuffer.bindTextures();
+
+  // Update and bind noise texture
+  static GLubyte buf[DEMO_POST_NOISE_SIZE * DEMO_POST_NOISE_SIZE * 3];
+  for (int i=0; i<DEMO_POST_NOISE_SIZE*DEMO_POST_NOISE_SIZE*3; ++i) {
+    buf[i] = fastrand()%255;
+  }
+  glActiveTexture(GL_TEXTURE3);
+  glBindTexture(GL_TEXTURE_2D, m_texNoise);
+  glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, DEMO_POST_NOISE_SIZE,
+      DEMO_POST_NOISE_SIZE, GL_RGB, GL_UNSIGNED_BYTE, buf);
 
   // Render lighting pass
   m_lightingPass.render();
