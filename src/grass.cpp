@@ -26,10 +26,10 @@ Grass::Grass(Demo &demo): m_demo(demo) {
       (void*)0);
   glEnableVertexAttribArray(0);
   glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat),
-      (void*)2);
+      (void*)(3*sizeof(GLfloat)));
   glEnableVertexAttribArray(1);
   glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat),
-      (void*)5);
+      (void*)(5*sizeof(GLfloat)));
   glEnableVertexAttribArray(2);
 
   // Load, compile and link shaders
@@ -63,16 +63,29 @@ Grass::~Grass() {
 }
 
 void Grass::render() {
+  GLuint uModel = m_demo.getUniformLocation("u_model");
+  GLuint uView = m_demo.getUniformLocation("u_view");
+  GLuint uProjection = m_demo.getUniformLocation("u_projection");
+
+  glUniformMatrix4fv(uProjection, 1, GL_FALSE, m_demo.projection());
+  glUniformMatrix4fv(uView, 1, GL_FALSE, m_demo.view());
+
   glBindVertexArray(m_vertexArray);
-  GLuint uniformMvp = m_demo.getUniformLocation("mvp");
 
   for (auto v: m_positions) { // render n blades of grass
+    // fake wind
     float r = (sin(v.x + m_demo.get("grass.t"))*0.3+0.3) * m_demo.get("wind");
     r += sin(v.z*0.3+0.7 - m_demo.get("grass.t")*0.9)*0.2;
+
+    // Model matrix
     glm::mat4 t = glm::translate(glm::mat4(1.), v);
     glm::mat4 rot = glm::rotate(t, r, glm::vec3(1,0,0));
-    glm::mat4 mvp = m_demo.camera() * glm::rotate(rot, .7f, glm::vec3(0,-1,0));
-    glUniformMatrix4fv(uniformMvp, 1, GL_FALSE, glm::value_ptr(mvp));
+    rot = glm::rotate(rot, .7f, glm::vec3(0,-1,0));
+
+    // Upload
+    glUniformMatrix4fv(uModel, 1, GL_FALSE, glm::value_ptr(rot));
+
+    // Draw
     glDrawArrays(GL_TRIANGLES, 0, 3);
   }
 

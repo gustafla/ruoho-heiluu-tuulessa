@@ -8,18 +8,18 @@ std::string const vertexSource = "#version 330 core\n"
 "layout (location = 1) in vec2 a_texture_pos;\n"
 "out vec2 v_texture_pos;\n"
 "void main() {\n"
-"  gl_Position = vec4(a_pos, 1.);\n"
 "  v_texture_pos = a_texture_pos;\n"
+"  gl_Position = vec4(a_pos, 1.);\n"
 "}\n";
 
 ShaderQuad::ShaderQuad(std::string const &fragmentFilename) {
   GLfloat v[] = {
-    -1, -1, 0, 0, 0,
-     1, -1, 0, 1, 0,
-     1,  1, 0, 1, 1,
-     1,  1, 0, 1, 1,
-    -1,  1, 0, 0, 1,
-    -1, -1, 0, 0, 0
+    -1., -1., 0., 0., 0.,
+     1., -1., 0., 1., 0.,
+     1.,  1., 0., 1., 1.,
+     1.,  1., 0., 1., 1.,
+    -1.,  1., 0., 0., 1.,
+    -1., -1., 0., 0., 0.
   };
 
   // Gen buffer and VA objects
@@ -36,7 +36,7 @@ ShaderQuad::ShaderQuad(std::string const &fragmentFilename) {
       (void*)0);
   glEnableVertexAttribArray(0);
   glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat),
-      (void*)3);
+      (void*)(3*sizeof(GLfloat)));
   glEnableVertexAttribArray(1);
 
   // Link shader

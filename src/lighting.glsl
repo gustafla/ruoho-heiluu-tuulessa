@@ -4,11 +4,12 @@ out vec4 fragColor;
 
 in vec2 v_texture_pos;
 
-uniform sampler2D tex0;
-uniform sampler2D tex1;
-uniform sampler2D tex2;
+uniform sampler2D u_tex0;
+uniform sampler2D u_tex1;
+uniform sampler2D u_tex2;
 
 void main() {
-  vec4 albedo_specular = texture(tex1, v_texture_pos);
-  fragColor = vec4(albedo_specular.rgb, 1.);
+  //vec4 albedo_specular = texture(u_tex2, v_texture_pos);
+  //fragColor = albedo_specular;
+  fragColor = vec4(texture(u_tex2, v_texture_pos).rgb, 1.);
 }

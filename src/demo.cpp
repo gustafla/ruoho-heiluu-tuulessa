@@ -41,13 +41,6 @@ Demo::Demo(sync_device *rocket, MusicPlayer const &player, int w, int h):
   glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, GL_TEXTURE_2D,
       m_gBufferTextures[2], 0);
 
-  // FB's attachments for rendering
-  GLuint attachments[3] = {
-    GL_COLOR_ATTACHMENT0,
-    GL_COLOR_ATTACHMENT1,
-    GL_COLOR_ATTACHMENT2};
-  glDrawBuffers(3, attachments);
-
   // Gen and add RBO
   glGenRenderbuffers(1, &m_gBufferRenderBuffer);
   glBindRenderbuffer(GL_RENDERBUFFER, m_gBufferRenderBuffer);
@@ -61,7 +54,14 @@ Demo::Demo(sync_device *rocket, MusicPlayer const &player, int w, int h):
     die(EXIT_FAILURE);
   }
 
-  // Get shader program for g-buffer
+  // FB's attachments for rendering
+  GLuint attachments[3] = {
+    GL_COLOR_ATTACHMENT0,
+    GL_COLOR_ATTACHMENT1,
+    GL_COLOR_ATTACHMENT2};
+  glDrawBuffers(3, attachments); // This is part of the FBO state
+
+  // shader program for g-buffer
   m_gBufferShaderProgram = linkProgram(
       loadFile("vertex.glsl"), loadFile("fragment.glsl"));
   if (!m_gBufferShaderProgram) {
@@ -92,8 +92,12 @@ double Demo::get(std::string name) {
   return sync_get_val(track, m_t*ROW_RATE);
 }
 
-glm::mat4 const &Demo::camera() {
-  return m_view_projection;
+GLfloat const *Demo::view() {
+  return glm::value_ptr(m_view);
+}
+
+GLfloat const *Demo::projection() {
+  return glm::value_ptr(m_projection);
 }
 
 void Demo::render() {
@@ -107,8 +111,7 @@ void Demo::render() {
       get("camera:target.x"),
       get("camera:target.y"),
       get("camera:target.z"));
-  glm::mat4 view = glm::lookAt(cameraPos, cameraTarget, glm::vec3(0., 1., 0.));
-  m_view_projection = m_projection * view;
+  m_view = glm::lookAt(cameraPos, cameraTarget, glm::vec3(0., 1., 0.));
 
   // Bind G-Buffer
   glBindFramebuffer(GL_FRAMEBUFFER, m_gBuffer);
@@ -130,8 +133,15 @@ void Demo::render() {
 
   // Render lighting pass
   m_lightingPass.render();
+
+#if (DEBUG)
+  GLenum err = glGetError();
+  if (err != GL_NO_ERROR) {
+    die(err);
+  }
+#endif
 }
 
-GLuint Demo::getUniformLocation(std::string const &name) {
+GLint Demo::getUniformLocation(std::string const &name) {
   return glGetUniformLocation(m_gBufferShaderProgram, name.c_str());
 }

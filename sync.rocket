@@ -1,24 +1,31 @@
 <sync rows="128">
 	<tracks>
+		<track name="grass.t">
+			<key value="0" interpolation="1" row="0"/>
+			<key value="40" interpolation="0" row="120"/>
+		</track>
+		<track name="wind">
+			<key value="1" interpolation="0" row="0"/>
+		</track>
 		<track name="camera:pos.z">
-			<key row="0" value="6" interpolation="1"/>
-			<key row="7" value="10" interpolation="0"/>
+			<key value="6" interpolation="1" row="0"/>
+			<key value="10" interpolation="0" row="7"/>
 		</track>
 		<track name="camera:pos.y">
-			<key row="0" value="3" interpolation="0"/>
+			<key value="3" interpolation="0" row="0"/>
 		</track>
 		<track name="camera:pos.x"/>
 		<track name="camera:target.z"/>
 		<track name="camera:target.y"/>
 		<track name="camera:target.x"/>
 		<track name="bg:color.b">
-			<key row="0" value="1" interpolation="0"/>
+			<key value="1" interpolation="0" row="0"/>
 		</track>
 		<track name="bg:color.g">
-			<key row="0" value="1" interpolation="0"/>
+			<key value="1" interpolation="0" row="0"/>
 		</track>
 		<track name="bg:color.r">
-			<key row="0" value="1" interpolation="0"/>
+			<key value="1" interpolation="0" row="0"/>
 		</track>
 	</tracks>
 	<bookmarks/>

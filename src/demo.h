@@ -13,16 +13,17 @@ class Demo {
     Demo(sync_device *rocket, MusicPlayer const &player, int w, int h);
     ~Demo();
     double get(std::string track);
-    glm::mat4 const &camera();
+    GLfloat const *projection();
+    GLfloat const *view();
     void render();
-    GLuint getUniformLocation(std::string const &name);
+    GLint getUniformLocation(std::string const &name);
 
   private:
     sync_device *m_rocket;
     MusicPlayer const &m_player;
     double m_t;
     glm::mat4 m_projection;
-    glm::mat4 m_view_projection;
+    glm::mat4 m_view;
     // Likely faster to cache tracks to a map as sync_get_track only iterates.
     std::unordered_map<std::string, sync_track const *> m_tracks;
 
@@ -32,8 +33,14 @@ class Demo {
     GLuint m_gBufferRenderBuffer;
     GLuint m_gBufferTextures[3];
 
-    // Lighting pass
+    // Post buffer
+    GLuint m_postBuffer;
+    GLuint m_postBufferRenderBuffer;
+    GLuint m_postBufferTexture;
+
+    // Lighting and post pass
     ShaderQuad m_lightingPass;
+    ShaderQuad m_postPass;
 
     // Visual components
     Grass *m_grass;
