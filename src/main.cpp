@@ -1,4 +1,4 @@
-#include "gl_headers.h" // essentially glew
+#include "gl_headers.h" // glew and glm
 #include <SDL.h>
 #include <iostream>
 #include <cstdlib>
@@ -149,8 +149,9 @@ int main(int argc, char *argv[]) {
 
   // Set OpenGL up further
   glViewport(0, 0, width, height);
-  glClearColor(1, 0, 0, 1); // Red for visibility
+  glClearColor(0, 0, 0, 0); // 0s for g-buffer
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  glEnable(GL_DEPTH_TEST);
 
   // Set up rocket
   sync_device *rocket = sync_create_device("sync");
@@ -159,7 +160,7 @@ int main(int argc, char *argv[]) {
   MusicPlayer player = MusicPlayer("music.ogg");
 
   // Demo loop
-  Demo demo(rocket, player);
+  Demo demo(rocket, player, width, height);
   SDL_Event e;
   bool running = true;
   while (running) {
