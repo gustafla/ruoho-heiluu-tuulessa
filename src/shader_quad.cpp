@@ -5,10 +5,10 @@
 
 std::string const vertexSource = "#version 330 core\n"
 "layout (location = 0) in vec3 a_pos;\n"
-"layout (location = 1) in vec2 a_texture_pos;\n"
-"out vec2 v_texture_pos;\n"
+"layout (location = 1) in vec2 a_texturePos;\n"
+"out vec2 v_texturePos;\n"
 "void main() {\n"
-"  v_texture_pos = a_texture_pos;\n"
+"  v_texturePos = a_texturePos;\n"
 "  gl_Position = vec4(a_pos, 1.);\n"
 "}\n";
 

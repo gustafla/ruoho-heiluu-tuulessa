@@ -9,64 +9,17 @@
 Demo::Demo(sync_device *rocket, MusicPlayer const &player, int w, int h):
   m_rocket(rocket), m_player(player), m_t(0.),
   m_projection(glm::perspective(glm::radians(60.), 16./9., .1, 100.)),
+  m_gBufferShaderProgram(linkProgram(loadFile("vertex.glsl"),
+        loadFile("fragment.glsl"))),
+  m_gBuffer(w, h, {{GL_RGB16F, GL_RGB, GL_FLOAT}, {GL_RGB16F, GL_RGB, GL_FLOAT},
+      {GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE}}),
   m_lightingPass("lighting.glsl"),
   m_grass(new Grass(*this))
 {
-  glGenFramebuffers(1, &m_gBuffer);
-  glBindFramebuffer(GL_FRAMEBUFFER, m_gBuffer);
-  glGenTextures(3, m_gBufferTextures);
-
-  // Position color buffer
-  glBindTexture(GL_TEXTURE_2D, m_gBufferTextures[0]);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, w, h, 0, GL_RGB, GL_FLOAT, nullptr);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
-      m_gBufferTextures[0], 0);
-
-  // Normal color buffer
-  glBindTexture(GL_TEXTURE_2D, m_gBufferTextures[1]);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, w, h, 0, GL_RGB, GL_FLOAT, nullptr);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D,
-      m_gBufferTextures[1], 0);
-
-  // Albedo and specular color buffer
-  glBindTexture(GL_TEXTURE_2D, m_gBufferTextures[2]);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE,
-      nullptr);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, GL_TEXTURE_2D,
-      m_gBufferTextures[2], 0);
-
-  // Gen and add RBO
-  glGenRenderbuffers(1, &m_gBufferRenderBuffer);
-  glBindRenderbuffer(GL_RENDERBUFFER, m_gBufferRenderBuffer);
-  glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, w, h);
-  glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT,
-      GL_RENDERBUFFER, m_gBufferRenderBuffer);
-
-  // Check for completeness
-  if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
-    std::cerr << "g-buffer FBO not complete" << std::endl;
-    die(EXIT_FAILURE);
-  }
-
-  // FB's attachments for rendering
-  GLuint attachments[3] = {
-    GL_COLOR_ATTACHMENT0,
-    GL_COLOR_ATTACHMENT1,
-    GL_COLOR_ATTACHMENT2};
-  glDrawBuffers(3, attachments); // This is part of the FBO state
-
-  // shader program for g-buffer
-  m_gBufferShaderProgram = linkProgram(
-      loadFile("vertex.glsl"), loadFile("fragment.glsl"));
-  if (!m_gBufferShaderProgram) {
-    die(EXIT_FAILURE);
-  }
+  m_uTexDiffuse = getUniformLocation("u_texDiffuse");
+  m_uTexSpecular = getUniformLocation("u_texSpecular");
+  m_uProjection = getUniformLocation("u_projection");
+  m_uView = getUniformLocation("u_view");
 
 #if (SYNC_PLAYER)
   player.pause(false);
@@ -75,10 +28,6 @@ Demo::Demo(sync_device *rocket, MusicPlayer const &player, int w, int h):
 
 Demo::~Demo() {
   delete m_grass;
-  glDeleteRenderbuffers(1, &m_gBufferRenderBuffer);
-  glDeleteTextures(3, m_gBufferTextures);
-  glDeleteFramebuffers(1, &m_gBuffer);
-  glDeleteProgram(m_gBufferShaderProgram);
 }
 
 double Demo::get(std::string name) {
@@ -92,14 +41,6 @@ double Demo::get(std::string name) {
   return sync_get_val(track, m_t*ROW_RATE);
 }
 
-GLfloat const *Demo::view() {
-  return glm::value_ptr(m_view);
-}
-
-GLfloat const *Demo::projection() {
-  return glm::value_ptr(m_projection);
-}
-
 void Demo::render() {
   m_t = m_player.getTime();
 
@@ -111,12 +52,17 @@ void Demo::render() {
       get("camera:target.x"),
       get("camera:target.y"),
       get("camera:target.z"));
-  m_view = glm::lookAt(cameraPos, cameraTarget, glm::vec3(0., 1., 0.));
+  glm::mat4 view = glm::lookAt(cameraPos, cameraTarget, glm::vec3(0., 1., 0.));
 
   // Bind G-Buffer
-  glBindFramebuffer(GL_FRAMEBUFFER, m_gBuffer);
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  m_gBuffer.bind();
+
+  // Use G-Buf shader for rendering visuals
   glUseProgram(m_gBufferShaderProgram);
+  glUniform1i(m_uTexDiffuse, 0);
+  glUniform1i(m_uTexSpecular, 1);
+  glUniformMatrix4fv(m_uProjection, 1, GL_FALSE, glm::value_ptr(m_projection));
+  glUniformMatrix4fv(m_uView, 1, GL_FALSE, glm::value_ptr(view));
 
   // Render visuals
   m_grass->render();
@@ -126,10 +72,7 @@ void Demo::render() {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   // Bind G-Buffer textures
-  for (int i=0; i<3; i++) {
-    glActiveTexture(GL_TEXTURE0 + i);
-    glBindTexture(GL_TEXTURE_2D, m_gBufferTextures[i]);
-  }
+  m_gBuffer.bindTextures();
 
   // Render lighting pass
   m_lightingPass.render();

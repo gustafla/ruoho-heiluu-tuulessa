@@ -3,9 +3,16 @@
 #include "util.h"
 #include "shaders.h"
 #include "gl_headers.h"
+#include "procedural_texture.h"
 #include <cmath>
 
-Grass::Grass(Demo &demo): m_demo(demo) {
+Grass::Grass(Demo &demo):
+  m_texDiffuse(renderProceduralTexture(256, 256, "grass_diffuse.glsl",
+      {GL_RGB, GL_RGB, GL_UNSIGNED_BYTE})),
+  m_texSpecular(renderProceduralTexture(256, 256, "grass_specular.glsl",
+      {GL_R8, GL_RED, GL_UNSIGNED_BYTE})),
+  m_demo(demo)
+{
   GLfloat v[] = {
     -.1, 0., 0., 0., 0., 0., 0., 1.,
      .1, 0., 0., 1., 0., 0., 0., 1.,
@@ -60,15 +67,12 @@ Grass::~Grass() {
   glDeleteVertexArrays(1, &m_vertexArray);
   glDeleteBuffers(1, &m_buffer);
   glDeleteProgram(m_program);
+  glDeleteTextures(1, &m_texDiffuse);
+  glDeleteTextures(1, &m_texSpecular);
 }
 
 void Grass::render() {
   GLuint uModel = m_demo.getUniformLocation("u_model");
-  GLuint uView = m_demo.getUniformLocation("u_view");
-  GLuint uProjection = m_demo.getUniformLocation("u_projection");
-
-  glUniformMatrix4fv(uProjection, 1, GL_FALSE, m_demo.projection());
-  glUniformMatrix4fv(uView, 1, GL_FALSE, m_demo.view());
 
   glBindVertexArray(m_vertexArray);
 

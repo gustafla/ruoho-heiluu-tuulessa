@@ -18,5 +18,8 @@ class Grass {
 
     std::vector<glm::vec3> m_positions;
 
+    GLuint m_texDiffuse;
+    GLuint m_texSpecular;
+
     Demo &m_demo;
 };

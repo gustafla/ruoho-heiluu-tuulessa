@@ -6,15 +6,14 @@ layout (location = 2) out vec4 gAlbedoSpecular;
 
 in vec3 v_pos;
 in vec3 v_normal;
-in vec2 v_texture_pos;
+in vec2 v_texturePos;
 
-uniform sampler2D u_tex_diffuse;
-uniform sampler2D u_tex_specular;
+uniform sampler2D u_texDiffuse;
+uniform sampler2D u_texSpecular;
 
 void main() {
   gPosition = v_pos;
   gNormal = normalize(v_normal);
-  //gAlbedoSpecular.rgb = texture(u_tex_diffuse, v_texture_pos).rgb;
-  //gAlbedoSpecular.a = texture(u_tex_specular, v_texture_pos).r;
-  gAlbedoSpecular = vec4(1., 0., 1., 1.);
+  gAlbedoSpecular.rgb = texture(u_texDiffuse, v_texturePos).rgb;
+  gAlbedoSpecular.a = texture(u_texSpecular, v_texturePos).r;
 }
