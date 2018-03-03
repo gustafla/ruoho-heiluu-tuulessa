@@ -23,6 +23,5 @@ GLuint renderProceduralTexture(int w, int h, std::string fragmentFilename,
   glViewport(v[0], v[1], v[2], v[3]);
 
   // Return texture ID and mark for keeping
-  fb.keepTexture();
-  return fb.texture();
+  return fb.keepTexture();
 }

@@ -17,8 +17,7 @@ class Framebuffer {
     ~Framebuffer();
     void bindTextures();
     void bind();
-    GLuint texture(int i=0);
-    void keepTexture(int i=0);
+    GLuint keepTexture(int i=0);
 
   private:
     int m_nTextures;

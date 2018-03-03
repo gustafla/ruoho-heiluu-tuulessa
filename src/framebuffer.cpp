@@ -85,10 +85,7 @@ void Framebuffer::bind() {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-GLuint Framebuffer::texture(int i) {
-  return m_textures[i];
-}
-
-void Framebuffer::keepTexture(int i) {
+GLuint Framebuffer::keepTexture(int i) {
   m_keepTextures[i] = true;
+  return m_textures[i];
 }

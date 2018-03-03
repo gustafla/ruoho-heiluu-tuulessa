@@ -16,7 +16,10 @@ Grass::Grass(Demo &demo):
   GLfloat v[] = {
     -.1, 0., 0., 0., 0., 0., 0., 1.,
      .1, 0., 0., 1., 0., 0., 0., 1.,
-     0., 1., 0., .5, 1., 0., 0., 1.
+     0., 1., 0., .5, 1., 0., 0., 1.,
+    -.1, 0., 0., 0., 0., 0., 0., -1.,
+     .1, 0., 0., 1., 0., 0., 0., -1.,
+     0., 1., 0., .5, 1., 0., 0., -1.
   };
 
   // Gen buffer and VA objects
@@ -55,6 +58,11 @@ Grass::Grass(Demo &demo):
     double y = (fastrand() % 20000)/10000. -1.;
     m_positions.push_back(glm::vec3(x*12, 0., y*12));
   }
+  for (int i = 0; i < 100; i++) {
+    double x = (fastrand() % 20000)/10000. -1.;
+    double y = (fastrand() % 20000)/10000. -1.;
+    m_positions.push_back(glm::vec3(x*24, 0., y*24));
+  }
 }
 
 Grass::~Grass() {
@@ -87,7 +95,7 @@ void Grass::render() {
     glUniformMatrix4fv(uModel, 1, GL_FALSE, glm::value_ptr(rot));
 
     // Draw
-    glDrawArrays(GL_TRIANGLES, 0, 3);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
   }
 
   glBindVertexArray(0);

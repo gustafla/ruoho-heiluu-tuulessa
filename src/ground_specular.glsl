@@ -5,5 +5,5 @@ out float fragColor;
 in vec2 v_texturePos;
 
 void main() {
-  fragColor = 0.;
+  fragColor = 1.;
 }

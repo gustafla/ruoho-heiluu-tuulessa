@@ -102,8 +102,8 @@ void Demo::render() {
       DEMO_POST_NOISE_SIZE, GL_RGB, GL_UNSIGNED_BYTE, buf);
 
   // Update lighting uniforms
-  m_lightingPass.setUniform("u_cameraPos", 3, value_ptr(cameraPos));
-  m_lightingPass.setUniform("u_cameraTarget", 3, value_ptr(cameraTarget));
+  m_lightingPass.setUniform("u_cameraPos", 3, glm::value_ptr(cameraPos));
+  m_lightingPass.setUniform("u_cameraTarget", 3, glm::value_ptr(cameraTarget));
 
   // Render lighting pass
   m_lightingPass.render();
@@ -112,7 +112,21 @@ void Demo::render() {
   GLenum err = glGetError();
   if (err != GL_NO_ERROR) {
     std::cout << "glGetError failed" << std::endl;
+    switch(err) {
+      case GL_INVALID_ENUM:      std::cerr << "GL_INVALID_ENUM"; break;
+      case GL_INVALID_VALUE:     std::cerr << "GL_INVALID_VALUE"; break;
+      case GL_INVALID_OPERATION: std::cerr << "GL_INVALID_OPERATION"; break;
+      case GL_STACK_OVERFLOW:    std::cerr << "GL_STACK_OVERFLOW"; break;
+      case GL_STACK_UNDERFLOW:   std::cerr << "GL_STACK_UNDERFLOW"; break;
+      case GL_OUT_OF_MEMORY:     std::cerr << "GL_OUT_OF_MEMORY"; break;
+      default: break;
+    }
     die(err);
+  }
+#endif
+#if (SYNC_PLAYER)
+  if (!m_player.isPlaying()) {
+    die(EXIT_SUCCESS);
   }
 #endif
 }
