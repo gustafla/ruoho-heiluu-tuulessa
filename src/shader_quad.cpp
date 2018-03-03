@@ -73,3 +73,16 @@ void ShaderQuad::render() {
 
   glBindVertexArray(0);
 }
+
+void ShaderQuad::setUniform(std::string name, int n, GLfloat v[4]) {
+  glUseProgram(m_program);
+  GLint ufm = glGetUniformLocation(m_program, name.c_str());
+
+  switch(n) {
+    case 1: glUniform1fv(ufm, n, v); break;
+    case 2: glUniform2fv(ufm, n, v); break;
+    case 3: glUniform3fv(ufm, n, v); break;
+    case 4: glUniform4fv(ufm, n, v); break;
+    default: break;
+  }
+}

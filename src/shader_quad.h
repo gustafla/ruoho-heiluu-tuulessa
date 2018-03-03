@@ -8,6 +8,7 @@ class ShaderQuad {
     ShaderQuad(std::string const &fragmentFilename);
     ~ShaderQuad();
     void render();
+    void setUniform(std::string name, int n, GLfloat v[4]);
 
   private:
     GLuint m_program;

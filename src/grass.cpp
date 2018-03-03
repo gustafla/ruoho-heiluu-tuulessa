@@ -39,12 +39,6 @@ Grass::Grass(Demo &demo):
       (void*)(5*sizeof(GLfloat)));
   glEnableVertexAttribArray(2);
 
-  // Load, compile and link shaders
-  m_program = linkProgram(loadFile("vertex.glsl"), loadFile("fragment.glsl"));
-  if (!m_program) {
-    die(EXIT_FAILURE);
-  }
-
   // Make up some positions
   for (int i = 0; i < 100; i++) {
     double x = (fastrand() % 20000)/10000. -1.;
@@ -66,7 +60,6 @@ Grass::Grass(Demo &demo):
 Grass::~Grass() {
   glDeleteVertexArrays(1, &m_vertexArray);
   glDeleteBuffers(1, &m_buffer);
-  glDeleteProgram(m_program);
   glDeleteTextures(1, &m_texDiffuse);
   glDeleteTextures(1, &m_texSpecular);
 }

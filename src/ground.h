@@ -5,17 +5,15 @@
 
 class Demo; // demo.h, can't include here
 
-class Grass {
+class Ground {
   public:
-    Grass(Demo &demo);
-    ~Grass();
+    Ground(Demo &demo);
+    ~Ground();
     void render();
 
   private:
     GLuint m_buffer;
     GLuint m_vertexArray;
-
-    std::vector<glm::vec3> m_positions;
 
     GLuint m_texDiffuse;
     GLuint m_texSpecular;

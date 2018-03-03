@@ -9,10 +9,10 @@
 		</track>
 		<track name="camera:pos.z">
 			<key value="6" interpolation="1" row="0"/>
-			<key value="10" interpolation="0" row="7"/>
+			<key value="10" interpolation="0" row="120"/>
 		</track>
 		<track name="camera:pos.y">
-			<key value="3" interpolation="0" row="0"/>
+			<key value="4" interpolation="0" row="0"/>
 		</track>
 		<track name="camera:pos.x"/>
 		<track name="camera:target.z"/>

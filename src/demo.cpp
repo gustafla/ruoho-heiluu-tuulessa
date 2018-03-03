@@ -5,17 +5,24 @@
 #include <iostream>
 
 #include "grass.h"
+#include "ground.h"
 
-Demo::Demo(sync_device *rocket, MusicPlayer const &player, int w, int h):
+Demo::Demo(sync_device *rocket, MusicPlayer &player, int w, int h):
   m_rocket(rocket), m_player(player), m_t(0.),
-  m_projection(glm::perspective(glm::radians(60.), 16./9., .1, 100.)),
+  m_projection(glm::perspective(glm::radians(60.), 16./9., .1, 500.)),
   m_gBufferShaderProgram(linkProgram(loadFile("vertex.glsl"),
         loadFile("fragment.glsl"))),
   m_gBuffer(w, h, {{GL_RGB16F, GL_RGB, GL_FLOAT}, {GL_RGB16F, GL_RGB, GL_FLOAT},
       {GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE}}),
   m_lightingPass("lighting.glsl"),
-  m_grass(new Grass(*this))
+  m_grass(new Grass(*this)),
+  m_ground(new Ground(*this))
 {
+  if (!m_gBufferShaderProgram) {
+    std::cerr << "Failed to link g-buffer shader program" << std::endl;
+    die(EXIT_FAILURE);
+  }
+
   m_uTexDiffuse = getUniformLocation("u_texDiffuse");
   m_uTexSpecular = getUniformLocation("u_texSpecular");
   m_uProjection = getUniformLocation("u_projection");
@@ -36,6 +43,7 @@ Demo::Demo(sync_device *rocket, MusicPlayer const &player, int w, int h):
 
 Demo::~Demo() {
   delete m_grass;
+  delete m_ground;
 }
 
 double Demo::get(std::string name) {
@@ -73,6 +81,7 @@ void Demo::render() {
   glUniformMatrix4fv(m_uView, 1, GL_FALSE, glm::value_ptr(view));
 
   // Render visuals
+  m_ground->render();
   m_grass->render();
 
   // Bind screen buffer
@@ -92,12 +101,17 @@ void Demo::render() {
   glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, DEMO_POST_NOISE_SIZE,
       DEMO_POST_NOISE_SIZE, GL_RGB, GL_UNSIGNED_BYTE, buf);
 
+  // Update lighting uniforms
+  m_lightingPass.setUniform("u_cameraPos", 3, value_ptr(cameraPos));
+  m_lightingPass.setUniform("u_cameraTarget", 3, value_ptr(cameraTarget));
+
   // Render lighting pass
   m_lightingPass.render();
 
 #if (DEBUG)
   GLenum err = glGetError();
   if (err != GL_NO_ERROR) {
+    std::cout << "glGetError failed" << std::endl;
     die(err);
   }
 #endif

@@ -10,10 +10,11 @@
 #define DEMO_POST_NOISE_SIZE 512
 
 class Grass; // grass.h
+class Ground; // ground.h
 
 class Demo {
   public:
-    Demo(sync_device *rocket, MusicPlayer const &player, int w, int h);
+    Demo(sync_device *rocket, MusicPlayer &player, int w, int h);
     ~Demo();
     double get(std::string track);
     void render();
@@ -21,7 +22,7 @@ class Demo {
 
   private:
     sync_device *m_rocket;
-    MusicPlayer const &m_player;
+    MusicPlayer &m_player;
     double m_t;
     glm::mat4 m_projection;
     // Likely faster to cache tracks to a map as sync_get_track only iterates.
@@ -43,4 +44,5 @@ class Demo {
 
     // Visual components
     Grass *m_grass;
+    Ground *m_ground;
 };
