@@ -30,5 +30,5 @@ make -j $(( $(nproc) + 1 )) -l $(nproc)
 ```
 
 Get the rocket track files and music.ogg from the demo release package
+<https://files.scene.org/view/parties/2018/instanssi18/demo/mfsck_ruoho_heiluu_tuulessa.tar.gz>
 
-<https://www.pouet.net/party.php?which=1544&when=2018>
