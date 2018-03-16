@@ -21,7 +21,7 @@ IN THE SOFTWARE.
 
 -------------------------------------------------------------------------------
 
-See lib/*/LICENSE.txt for licensing of 3rd party program libraries
+See lib/*/LICENSE.txt for licensing of 3rd party libraries
 
 -------------------------------------------------------------------------------
 

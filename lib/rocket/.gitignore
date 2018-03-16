@@ -1,0 +1,50 @@
+*.a
+*.db
+*.lib
+*.ncb
+*.o
+*.opendb
+*.pdb
+*.suo
+*.idb
+*.user
+*.sdf
+*.opensdf
+moc_*.cpp
+qrc_*.cpp
+ui_*.h
+.*.swp
+.DS_Store
+.qmake.stash
+*~
+/Debug Client/
+/Debug/
+/Release Client/
+/Release/
+/editor/Makefile*
+/editor/editor.vcproj
+/editor/editor.vcxproj
+/editor/editor.vcxproj.filters
+/editor/editor.sln
+/editor/debug/
+/editor/release/
+/editor/editor
+/editor/editor/
+/editor/editor.app/
+/examples/example_bass
+/examples/Debug Client/
+/examples/Debug/
+/examples/Release Client/
+/examples/Release/
+/examples/x64/
+/examples/include/
+/examples/lib/
+/examples/lib64/
+/lib/Debug Client/
+/lib/Debug/
+/lib/Release Client/
+/lib/Release/
+/lib/x64/
+/packages/
+/x64/
+build-*

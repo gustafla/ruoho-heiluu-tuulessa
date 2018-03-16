@@ -1,0 +1,51 @@
+version: '{build}'
+
+environment:
+  matrix:
+  - platform: x64
+    cc: VS2013
+    QTDIR: C:\Qt\5.5\msvc2013_64
+    PLATFORM_TAG: win64
+  - platform: Win32
+    cc: VS2013
+    QTDIR: C:\Qt\5.5\msvc2013
+    PLATFORM_TAG: win32
+
+configuration:
+  - Release
+
+cache:
+  - packages -> **\packages.config
+  - bass24.zip
+
+install:
+  - nuget restore examples.vs2013.sln
+
+before_build:
+  - set PATH=%QTDIR%\bin;%PATH%
+  - if defined APPVEYOR_REPO_TAG_NAME set VERSION_TAG=%APPVEYOR_REPO_TAG_NAME:~1%
+  - if not defined APPVEYOR_REPO_TAG_NAME set VERSION_TAG=%APPVEYOR_REPO_BRANCH%
+
+build_script:
+  - msbuild examples.vs2013.sln /v:minimal /nologo
+  - msbuild examples.vs2013.sln /v:minimal /nologo /property:Configuration="Release Client"
+  - cd editor
+  - qmake -tp vc editor.pro
+  - msbuild /v:minimal /nologo
+
+after_build:
+  - mkdir staging
+  - cd staging
+  - copy ..\release\editor.exe .
+  - windeployqt --release editor.exe
+
+artifacts:
+  - path: editor\staging
+    name: rocket-editor-$(VERSION_TAG)-$(PLATFORM_TAG)
+
+deploy:
+  provider: GitHub
+  auth_token:
+    secure: 3VHmG5xkjCw69oeiIal5Sd5qfK0+8vZxMIPjyp2z73A2LLd2Y289U3yT/NUCT/QS
+  on:
+    appveyor_repo_tag: true

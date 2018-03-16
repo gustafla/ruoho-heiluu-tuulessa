@@ -1,32 +1,33 @@
-# first, ignore everything by default
-*
+# ignore build dirs
+[Rr]elease/
+[Dd]ebug/
+[Bb]uild/
+lib/glew/auto
 
-# allow gitignore
-!.gitignore
+# rocket track files
+*.track
 
-# allow CMakeLists.txt
-!CMakeLists.txt
+# binary files
+*.o
+*.a
+*.png
+*.opus
+*.wav
+*.aac
+*.mp3
+*.ogg
+*.flac
 
-# allow markdown and licenses
-!*.md
-!LICENSE.txt
+# CMake
+CMakeCache.txt
+CMakeFiles
+CMakeScripts
+Makefile
+cmake_install.cmake
+install_manifest.txt
 
-# allow src dir
-!src/
+# misc
+*.log
 
-# allow libs
-!lib/
-!lib/glew/
-!lib/glew/GL/
-!lib/rocket/
-!lib/stb/
-
-#and src files inside
-!*.glsl
-!*.cpp
-!*.c
-!*.h
-
-# allow rocket data
-!sync.rocket
-
+# Ignore macOS .DS_Store
+.DS_Store
