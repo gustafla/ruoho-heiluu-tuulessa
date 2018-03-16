@@ -1,6 +1,6 @@
-# Instanssidemo2018
+# Simlaatiodemo
 
-A demo to be released at Instanssi 2018
+A demo to be released at Simulaatio 2018
 
 Binary requires a modern 64-bit GNU/Linux (libc.so.6), OpenGL 3.3 and SDL 2.0
 
